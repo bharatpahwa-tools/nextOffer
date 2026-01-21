@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { TimelineConfig } from '../../models/timeline.model';
 import { Jobs } from '../../models/jobs.model';
+import { Skills } from '../../models/skills.model';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -12,11 +14,36 @@ export class SupabaseService {
   readonly JOBS_TABLE = 'jobs';
   readonly SKILLS_TABLE = 'skills';
 
+  private isReadySubject = new BehaviorSubject<boolean>(false);
+  isReady$ = this.isReadySubject.asObservable();
+
   constructor() {}
 
   initialize(supabaseUrl: string, supabaseKey: string) {
     if (supabaseUrl && supabaseKey) {
       this.supabase = createClient(supabaseUrl, supabaseKey);
+      this.isReadySubject.next(true);
+    } else {
+      this.isReadySubject.next(false);
+    }
+  }
+
+  async testConnection(url: string, key: string): Promise<boolean> {
+    try {
+      const tempClient = createClient(url, key);
+      // Attempt a simple query to verify connection
+      const { error } = await tempClient
+        .from(this.SKILLS_TABLE)
+        .select('id')
+        .limit(1);
+      if (error) {
+        console.error('Connection test failed:', error);
+        return false;
+      }
+      return true;
+    } catch (error) {
+      console.error('Connection test error:', error);
+      return false;
     }
   }
 
@@ -98,7 +125,7 @@ export class SupabaseService {
 
   // Skills Methods
 
-  async getSkills(): Promise<import('../../models/skills.model').Skills[]> {
+  async getSkills(): Promise<Skills[]> {
     if (!this.supabase) return [];
 
     const { data, error } = await this.supabase

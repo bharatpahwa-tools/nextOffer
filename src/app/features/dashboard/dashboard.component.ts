@@ -7,7 +7,6 @@ import { CommonModule } from '@angular/common';
 import { SupabaseService } from '../../core/services/supabase.service';
 import { JobsComponent } from '../jobs/jobs.component';
 import { SkillsComponent } from '../skills/skills.component';
-import { ConfirmationModalComponent } from '../../shared/confirmation-modal/confirmation-modal.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -25,13 +24,38 @@ import { ConfirmationModalComponent } from '../../shared/confirmation-modal/conf
   styleUrl: './dashboard.component.css',
 })
 export class DashboardComponent {
-  activetab: string = 'timeline';
+  activetab: string = 'dashboard';
   isSetupModalOpen: boolean = false;
   supabaseUrl: string = localStorage.getItem('supabaseUrl') || '';
   supabaseKey: string = localStorage.getItem('supabaseKey') || '';
+  isSupabaseReady: boolean = false;
 
   constructor(private supabaseService: SupabaseService) {
-    this.supabaseService.initialize(this.supabaseUrl, this.supabaseKey);
+    this.supabaseService.isReady$.subscribe((ready) => {
+      this.isSupabaseReady = ready;
+      if (!ready) {
+        this.isSetupModalOpen = true;
+      }
+    });
+    this.checkInitialConnection();
+  }
+
+  async checkInitialConnection() {
+    if (this.supabaseUrl && this.supabaseKey) {
+      const isConnected = await this.supabaseService.testConnection(
+        this.supabaseUrl,
+        this.supabaseKey,
+      );
+      console.log(isConnected);
+      if (isConnected) {
+        this.supabaseService.initialize(this.supabaseUrl, this.supabaseKey);
+        this.isSetupModalOpen = false;
+      } else {
+        this.isSetupModalOpen = true;
+      }
+    } else {
+      this.isSetupModalOpen = true;
+    }
   }
 
   toggleSetupModal() {
@@ -43,15 +67,16 @@ export class DashboardComponent {
     console.log(this.activetab);
   }
 
-  onSupabaseUrlChange(url: string) {
+  async onSupabaseUrlChange(url: string) {
     this.supabaseUrl = url;
+    console.log(url);
     localStorage.setItem('supabaseUrl', url);
-    this.supabaseService.initialize(this.supabaseUrl, this.supabaseKey);
   }
 
-  onSupabaseKeyChange(key: string) {
-    localStorage.setItem('supabaseKey', key);
+  async onSupabaseKeyChange(key: string) {
     this.supabaseKey = key;
+    console.log(key);
+    localStorage.setItem('supabaseKey', key);
     this.supabaseService.initialize(this.supabaseUrl, this.supabaseKey);
   }
 }

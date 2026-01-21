@@ -44,10 +44,16 @@
       >
         <img class="h-12 w-12" [src]="supabaseIconUrl" alt="Supabase Icon" />
         <h2 class="ovo-regular text-xl font-semibold text-gray-800">
-          Supabase Setup
+          {{
+            isSupabaseReady ? "Supabase Configuration" : "Connect your Database"
+          }}
         </h2>
-        <p class="text-sm text-gray-600">
-          Enter your Supabase credentials to get started
+        <p class="text-sm text-gray-600 text-center px-4">
+          {{
+            isSupabaseReady
+              ? "Update your Supabase credentials if needed."
+              : "You need to connect to Supabase before you can start tracking your progress."
+          }}
         </p>
       </div>
       <form
@@ -68,7 +74,7 @@
           />
         </div>
 
-        <div class="px-4 mb-8">
+        <div class="px-4 mb-2">
           <label class="mb-1 block text-sm font-medium text-gray-700">
             API Key<sup class="text-xs text-red-500">*</sup>
           </label>
@@ -81,10 +87,54 @@
           />
         </div>
 
+        <div class="px-4 mb-8 flex items-center justify-between">
+          <button
+            type="button"
+            (click)="verifyConnection()"
+            [disabled]="
+              !supabaseUrl || !supabaseKey || connectionStatus === 'testing'
+            "
+            class="text-xs font-semibold px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors disabled:opacity-50"
+          >
+            {{
+              connectionStatus === "testing"
+                ? "Testing..."
+                : "Verify Connection"
+            }}
+          </button>
+
+          <div class="flex items-center gap-2">
+            <span
+              *ngIf="connectionStatus === 'testing'"
+              class="flex h-2 w-2 relative"
+            >
+              <span
+                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"
+              ></span>
+              <span
+                class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"
+              ></span>
+            </span>
+            <span
+              *ngIf="connectionStatus === 'success'"
+              class="text-[10px] uppercase font-bold text-green-600 bg-green-50 px-2 py-1 rounded-md border border-green-100"
+            >
+              Connected
+            </span>
+            <span
+              *ngIf="connectionStatus === 'error'"
+              class="text-[10px] uppercase font-bold text-red-600 bg-red-50 px-2 py-1 rounded-md border border-red-100"
+            >
+              Connection Failed
+            </span>
+          </div>
+        </div>
+
         <div
           class="flex w-full mt-4 border-t border-gray-200 justify-center p-0"
         >
           <button
+            *ngIf="isSupabaseReady"
             type="button"
             (click)="closeModal()"
             class="w-1/2 px-5 py-2.5 hover:bg-red-500 hover:text-white text-sm border-r border-gray-200 font-medium text-gray-700 hover:bg-black/5"
@@ -94,8 +144,9 @@
 
           <button
             type="submit"
-            [disabled]="configForm.invalid"
-            class="bg-blue-100 w-1/2 text-center px-5 py-2.5 text-sm text-blue-800 transition-colors hover:bg-blue-600 hover:text-white hover:shadow-lg"
+            [disabled]="configForm.invalid || connectionStatus != 'success'"
+            class="bg-blue-100 w-full text-center px-5 py-2.5 text-sm text-blue-800 transition-colors hover:bg-blue-600 hover:text-white hover:shadow-lg"
+            [class.cursor-not-allowed]="connectionStatus != 'success'"
           >
             Save Credentials
           </button>

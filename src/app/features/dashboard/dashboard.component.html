@@ -5,13 +5,15 @@
   (toggleSetupModal)="toggleSetupModal()"
 />
 <app-setup-modal
+  *ngIf="isSetupModalOpen"
+  [isSetupModalOpen]="isSetupModalOpen"
   [supabaseUrl]="supabaseUrl"
   [supabaseKey]="supabaseKey"
+  [isSupabaseReady]="isSupabaseReady"
   (supabaseUrlChange)="onSupabaseUrlChange($event)"
   (supabaseKeyChange)="onSupabaseKeyChange($event)"
-  [isSetupModalOpen]="isSetupModalOpen"
   (toggleSetupModal)="toggleSetupModal()"
-/>
+></app-setup-modal>
 
 <section class="w-full bg-gray-50">
   <div
