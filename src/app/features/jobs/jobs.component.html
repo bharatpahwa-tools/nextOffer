@@ -1,0 +1,333 @@
+<section
+  id="timeline"
+  *ngIf="!jobs?.length"
+  class="flex flex-col mx-auto items-center justify-center"
+>
+  <div
+    class="w-full lg:mt-10 rounded-3xl max-w-lg bg-gray-50 border-b border-gray-200 my-auto flex flex-col items-center justify-center"
+  >
+    <div class="p-6 flex flex-col items-center gap-2 justify-center">
+      <img
+        class="h-16 w-16 mb-2"
+        src="/assets/images/jobsIcon.png"
+        alt="newJob"
+      />
+      <p class="ovo-regular text-2xl font-semibold text-gray-800">Add Jobs</p>
+      <p class="text-md text-gray-600">Add and track new job opportunities</p>
+    </div>
+    <button
+      type="button"
+      (click)="toggleJobsModal()"
+      class="bg-blue-100 rounded-br-3xl rounded-bl-3xl w-full text-center px-5 py-2.5 text-sm text-blue-800 transition-colors hover:bg-blue-600 hover:text-white"
+    >
+      Add Job
+    </button>
+  </div>
+</section>
+
+<section
+  *ngIf="jobs?.length"
+  class="w-full max-w-6xl bg-gray-50 lg:mt-10 lg:rounded-3xl border border-gray-200 mx-auto pt-8"
+>
+  <!-- Header -->
+  <div
+    class="flex lg:flex-row flex-col items-center border-b border-gray-200 justify-between pb-4"
+  >
+    <div class="flex">
+      <img
+        class="h-16 w-16 ml-8"
+        src="/assets/images/jobsIcon.png"
+        alt="Jobs"
+      />
+      <div class="px-6">
+        <h2
+          class="text-xl lg:text-2xl font-bold text-gray-800 ovo-regular tracking-tight"
+        >
+          Job Applications
+        </h2>
+        <p class="lg:text-lg text-sm text-gray-500 mt-1">
+          Track and manage your opportunities
+        </p>
+      </div>
+    </div>
+    <div class="flex lg:w-fit w-full justify-center items-center px-6 gap-4">
+      <button
+        (click)="toggleJobsModal()"
+        class="group flex lg:w-fit w-full mt-4 lg:mt-0 justify-center items-center gap-2 px-4 py-2 rounded-xl bg-gray-50 text-gray-600 bg-blue-50 text-blue-600 transition-all border border-gray-200 hover:border-blue-200"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="w-4 h-4"
+        >
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        <span class="geist-mono-regular text-sm font-medium">Add Job</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="bg-white rounded-b-3xl overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left">
+        <thead>
+          <tr class="border-b border-gray-100 bg-gray-50/50">
+            <th
+              class="px-8 py-5 text-xs font-semibold text-gray-500 uppercase tracking-wider"
+            >
+              Company
+            </th>
+            <th
+              class="px-6 py-5 text-xs font-semibold text-gray-500 uppercase tracking-wider"
+            >
+              Position
+            </th>
+            <th
+              class="px-6 py-5 text-xs font-semibold text-gray-500 uppercase tracking-wider"
+            >
+              Status
+            </th>
+            <th
+              class="px-6 py-5 text-xs font-semibold text-gray-500 uppercase tracking-wider"
+            >
+              Deadline
+            </th>
+            <th
+              class="px-6 py-5 text-xs font-semibold text-gray-500 uppercase tracking-wider"
+            >
+              Link/Email
+            </th>
+            <th
+              class="px-6 py-5 text-xs font-semibold text-gray-500 uppercase tracking-wider"
+            >
+              Notes
+            </th>
+            <th
+              class="px-8 py-5 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right"
+            >
+              Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-50">
+          <tr
+            *ngFor="let job of jobs"
+            class="hover:bg-gray-50/50 transition-colors group"
+          >
+            <td class="px-8 py-4">
+              <div class="flex items-center gap-3">
+                <span class="font-semibold text-gray-800">{{
+                  job.companyName
+                }}</span>
+              </div>
+            </td>
+            <td class="px-6 py-4">
+              <span class="text-sm text-gray-600 font-medium">{{
+                job.position
+              }}</span>
+            </td>
+            <td class="px-6 py-4">
+              <span
+                class="px-3 py-1 rounded-full text-xs font-medium border"
+                [ngClass]="{
+                  'bg-blue-50 text-blue-700 border-blue-100':
+                    job.status.status === 'new',
+                  'bg-purple-50 text-purple-700 border-purple-100':
+                    job.status.status === 'applied',
+                  'bg-yellow-50 text-yellow-700 border-yellow-100':
+                    job.status.status === 'interviewing',
+                  'bg-red-50 text-red-700 border-red-100':
+                    job.status.status === 'rejected',
+                  'bg-green-50 text-green-700 border-green-100':
+                    job.status.status === 'accepted',
+                  'bg-gray-50 text-gray-700 border-gray-100':
+                    job.status.status === 'closed' ||
+                    job.status.status === 'referred',
+                }"
+              >
+                {{ job.status.status | titlecase }}
+              </span>
+            </td>
+            <td class="px-6 py-4">
+              <div class="flex items-center gap-2 text-sm text-gray-500">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="opacity-70"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                {{ job.deadline | date: "mediumDate" }}
+              </div>
+            </td>
+            <td class="px-6 py-4">
+              <div class="flex items-center gap-2">
+                <a
+                  *ngIf="job.jobLink"
+                  [href]="getJobLink(job.jobLink)"
+                  target="_blank"
+                  class="text-blue-600 decoration-none hover:text-blue-800 hover:underline flex items-center gap-1 text-sm font-medium"
+                  title="View Job"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
+                    ></path>
+                    <path
+                      d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
+                    ></path>
+                  </svg>
+                </a>
+
+                <span *ngIf="job.jobLink && job.email" class="text-gray-300"
+                  >|</span
+                >
+
+                <a
+                  *ngIf="job.email"
+                  [href]="'mailto:' + job.email"
+                  class="text-blue-600 decoration-none hover:text-blue-800 hover:underline flex items-center gap-1 text-sm font-medium"
+                  title="Send Email"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                    ></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                  </svg>
+                </a>
+              </div>
+            </td>
+            <td class="px-6 py-4 max-w-xs">
+              <p class="text-sm text-gray-500 truncate" [title]="job.notes">
+                {{ job.notes || "-" }}
+              </p>
+            </td>
+            <td class="px-8 py-4 text-right">
+              <div
+                class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <button
+                  (click)="editJob(job.id)"
+                  class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                  title="Edit"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+                    ></path>
+                    <path
+                      d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
+                    ></path>
+                  </svg>
+                </button>
+                <button
+                  (click)="deleteJob(job.id)"
+                  class="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                  title="Delete"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path
+                      d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                    ></path>
+                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Empty State -->
+      <div
+        *ngIf="jobs.length === 0"
+        class="flex flex-col items-center justify-center p-12 text-center"
+      >
+        <h3 class="text-lg font-medium text-gray-800 mb-1">
+          No applications yet
+        </h3>
+        <p class="text-gray-500 mb-4">
+          Start tracking your job search journey.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<app-jobs-modal
+  [currentJob]="currentJob"
+  (saveNewJob)="saveNewJob($event)"
+  [mode]="mode"
+  (toggleJobsModal)="toggleJobsModal()"
+  *ngIf="isAddNewJobModalOpen"
+></app-jobs-modal>
+
+<confirmation-modal
+  *ngIf="isConfirmationModalOpen"
+  [confirmationType]="confirmationType"
+  (confirmAction)="confirmAction($event)"
+  [assetId]="assetId"
+  [isConfirmationModalOpen]="isConfirmationModalOpen"
+/>

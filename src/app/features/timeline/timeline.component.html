@@ -1,0 +1,173 @@
+<section
+  id="timeline"
+  class="flex flex-col mx-auto items-center justify-center"
+>
+  <div
+    *ngIf="!timelineConfig.title"
+    class="w-full lg:mt-10 rounded-3xl max-w-lg bg-gray-50 border-b border-gray-200 my-auto flex flex-col items-center justify-center"
+  >
+    <div class="p-6 flex flex-col gap-2 items-center justify-center">
+      <img
+        class="h-16 w-16 mb-2"
+        src="/assets/images/calendar.png"
+        alt="calender"
+      />
+      <p class="ovo-regular text-2xl font-semibold text-gray-800">
+        Start your journey
+      </p>
+      <p class="text-md text-center text-gray-600">
+        Create a timeline, track your progress watch the countdown!
+      </p>
+    </div>
+    <button
+      type="button"
+      (click)="toggleTimelineModal()"
+      class="bg-blue-100 rounded-br-3xl rounded-bl-3xl w-full text-center px-5 py-2.5 text-sm text-blue-800 transition-colors hover:bg-blue-600 hover:text-white"
+    >
+      Create Timeline
+    </button>
+  </div>
+
+  <div
+    *ngIf="timelineConfig.title && timelineConfig.duration"
+    class="w-full border border-gray-200 max-w-6xl lg:mt-10 bg-gray-50 lg:rounded-3xl backdrop-blur-xl transition-all"
+  >
+    <!-- Header -->
+    <div
+      class="flex lg:flex-row flex-col px-6 pb-4 pt-4 justify-between items-center border-b border-gray-200"
+    >
+      <div class="flex items-center">
+        <img class="h-14 w-16 mr-4" src="/assets/images/goal.png" alt="Goals" />
+        <div>
+          <h2
+            class="text-xl lg:text-2xl ovo-regular font-bold text-gray-800 tracking-tight"
+          >
+            {{ timelineConfig.title }}
+          </h2>
+          <p class="text-gray-500 text-sm lg:text-lg mt-1">
+            Keep pushing forward, every day counts!
+          </p>
+        </div>
+      </div>
+      <button
+        (click)="toggleTimelineModal()"
+        class="group flex items-center justify-center lg:w-fit w-full text-center lg:mt-0 mt-4 gap-2 px-4 py-2 rounded-xl bg-gray-50 text-gray-600 bg-blue-50 text-blue-600 transition-all border border-gray-200 hover:border-blue-200"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="w-4 h-4"
+        >
+          <path
+            d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"
+          ></path>
+        </svg>
+        <span class="geist-mono-regular text-sm font-medium"
+          >Edit Timeline</span
+        >
+      </button>
+    </div>
+
+    <div class="p-8">
+      <!-- Stats -->
+      <div class="grid flex lg:grid-cols-3 gap-6 mb-10">
+        <div
+          class="bg-white p-4 rounded-2xl border border-gray-100 flex flex-col items-center justify-center"
+        >
+          <span
+            class="text-xs ovo-regular font-semibold text-gray-500 uppercase tracking-wider mb-1"
+            >Start Date</span
+          >
+          <span class="text-lg font-bold ovo-regular text-gray-800">{{
+            timelineConfig.startDate | date: "mediumDate"
+          }}</span>
+        </div>
+        <div
+          class="bg-blue-50 p-4 rounded-2xl border border-blue-100 flex flex-col items-center justify-center relative overflow-hidden"
+        >
+          <div
+            class="absolute inset-0 bg-blue-600/5 blur-xl rounded-full transform scale-150"
+          ></div>
+          <span
+            class="text-xs ovo-regular font-semibold text-blue-600 uppercase tracking-wider mb-1 relative z-10"
+            >Days Left</span
+          >
+          <span
+            class="text-3xl ovo-regular font-black text-blue-600 relative z-10"
+            >{{ daysLeft }}</span
+          >
+        </div>
+        <div
+          class="bg-white p-4 rounded-2xl border border-gray-100 flex flex-col items-center justify-center"
+        >
+          <span
+            class="text-xs ovo-regular font-semibold text-gray-500 uppercase tracking-wider mb-1"
+            >End Date</span
+          >
+          <span class="text-lg ovo-regular font-bold text-gray-800">{{
+            endDate | date: "mediumDate"
+          }}</span>
+        </div>
+      </div>
+
+      <!-- Grid -->
+      <div class="flex flex-wrap gap-3 justify-center">
+        <div
+          *ngFor="let day of daysArray; let i = index"
+          class="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 relative group"
+          [ngClass]="{
+            'bg-gray-900 border  border-gray-200 text-gray-300':
+              day.status === 'passed',
+            'bg-blue-600 text-white  scale-110 z-10 ring-4 ring-blue-50':
+              day.status === 'today',
+            'bg-white border border-gray-200 hover:border-blue-300 hover:shadow-md':
+              day.status === 'future',
+          }"
+          title="Day {{ i + 1 }}"
+        >
+          <svg
+            *ngIf="day.status === 'passed'"
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="w-5 h-5 opacity-60"
+          >
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+
+          <span *ngIf="day.status === 'today'" class="text-xs font-bold">{{
+            i + 1
+          }}</span>
+
+          <span
+            *ngIf="day.status === 'future'"
+            class="text-[10px] text-gray-300 font-medium group-hover:text-blue-400 transition-colors"
+            >{{ i + 1 }}</span
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<app-timeline-modal
+  [timelineConfig]="timelineConfig"
+  (onTimelineConfigChange)="onTimelineConfigChange($event)"
+  [isTimelineModalOpen]="isTimelineModalOpen"
+  (toggleTimelineModal)="toggleTimelineModal()"
+  *ngIf="isTimelineModalOpen"
+></app-timeline-modal>

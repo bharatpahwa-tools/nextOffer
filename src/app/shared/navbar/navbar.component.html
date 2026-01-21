@@ -1,0 +1,108 @@
+<section
+  id="navbar"
+  class="navbar sticky top-0 z-50 p-4 lg:px-8 border-b-2 bg-gray-50/80 border-t-2 border-gray-100 backdrop-blur-md"
+>
+  <div class="flex items-center justify-between">
+    <div class="logo">
+      <img class="h-12" [src]="logoUrl" alt="NextOffer Logo" />
+    </div>
+
+    <!-- Desktop Menu -->
+    <div class="hidden md:flex items-center gap-10">
+      <div class="navitems">
+        <ul
+          class="flex items-center font-bold geist-mono-regular text-sm gap-4"
+        >
+          <li *ngFor="let navitem of navitems">
+            <button
+              (click)="changeTab(navitem.title.toLowerCase())"
+              class="cursor-pointer px-3 py-1 rounded transition-colors"
+              [class.bg-blue-600]="activetab === navitem.title.toLowerCase()"
+              [class.text-white]="activetab === navitem.title.toLowerCase()"
+              [class.bg-gray-50]="activetab !== navitem.title.toLowerCase()"
+              [class.hover:bg-gray-200]="
+                activetab !== navitem.title.toLowerCase()
+              "
+            >
+              {{ navitem.title.toUpperCase() }}
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="hidden md:flex actions">
+      <button
+        (click)="openModal()"
+        class="geist-mono-regular bg-blue-50 text-blue-700 hover:text-white hover:bg-blue-700 transition-colors p-2 px-4 text-sm rounded-sm"
+      >
+        {{ supabaseUrl && supabaseKey ? "Edit Set-Up" : "Set-Up" }}
+      </button>
+    </div>
+
+    <!-- Mobile Hamburger Button -->
+    <button
+      (click)="toggleMobileMenu()"
+      class="md:hidden p-2 text-gray-600 hover:bg-gray-200 rounded-lg transition-colors"
+      aria-label="Toggle menu"
+    >
+      <svg
+        *ngIf="!isMobileMenuOpen"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="w-6 h-6"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+        />
+      </svg>
+      <svg
+        *ngIf="isMobileMenuOpen"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="w-6 h-6"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M6 18L18 6M6 6l12 12"
+        />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Mobile Menu Dropdown -->
+  <div
+    *ngIf="isMobileMenuOpen"
+    class="md:hidden mt-4 pt-4 border-t border-gray-200 flex flex-col gap-4 animate-in slide-in-from-top-2 duration-200"
+  >
+    <ul class="flex flex-col font-bold geist-mono-regular text-sm gap-2">
+      <li *ngFor="let navitem of navitems">
+        <button
+          (click)="changeTab(navitem.title.toLowerCase()); toggleMobileMenu()"
+          class="w-full text-left cursor-pointer px-4 py-3 rounded-xl transition-colors"
+          [class.bg-blue-600]="activetab === navitem.title.toLowerCase()"
+          [class.text-white]="activetab === navitem.title.toLowerCase()"
+          [class.bg-gray-100]="activetab !== navitem.title.toLowerCase()"
+        >
+          {{ navitem.title.toUpperCase() }}
+        </button>
+      </li>
+    </ul>
+    <div class="actions flex flex-col">
+      <button
+        (click)="openModal(); toggleMobileMenu()"
+        class="w-full geist-mono-regular bg-blue-50 hover:bg-blue-100 transition-colors p-3 text-sm text-blue-700"
+      >
+        {{ supabaseUrl && supabaseKey ? "Edit Set-Up" : "Set-Up" }}
+      </button>
+    </div>
+  </div>
+</section>

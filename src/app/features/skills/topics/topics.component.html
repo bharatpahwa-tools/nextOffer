@@ -1,0 +1,402 @@
+<section
+  id="topics-empty"
+  *ngIf="!topics?.length"
+  class="flex flex-col mx-auto items-center justify-center"
+>
+  <div
+    class="w-full lg:mt-10 rounded-3xl max-w-lg bg-gray-50 border-b border-gray-200 my-auto flex flex-col items-center justify-center"
+  >
+    <div class="p-6 flex flex-col gap-2 items-center justify-center">
+      <img
+        class="h-16 w-16 mb-2"
+        [src]="
+          currentSkill.skillIcon
+            ? currentSkill.skillIcon
+            : '/assets/images/topic.png'
+        "
+        alt="skills"
+      />
+      <p class="ovo-regular text-2xl font-semibold text-gray-800">Add Topics</p>
+      <p class="text-md text-center text-gray-600">
+        Add Topics for {{ currentSkill.name }}
+      </p>
+    </div>
+    <div class="w-full flex border-t border-gray-200">
+      <button
+        class="bg-gray-50 mx-auto text-sm hover:bg-gray-100 border-r border-gray-200 flex w-1/2 justify-center rounded-bl-3xl px-5 py-2.5 max-w-lg py-2 text-center"
+        (click)="viewSkillsSection()"
+      >
+        Go Back
+      </button>
+      <button
+        type="button"
+        (click)="toggleTopicModal()"
+        class="bg-blue-100 w-1/2 rounded-br-3xl text-center px-5 py-2.5 text-sm text-blue-800 transition-colors hover:bg-blue-600 hover:text-white"
+      >
+        Add Topic
+      </button>
+    </div>
+  </div>
+</section>
+
+<section
+  id="topics-list"
+  *ngIf="topics.length"
+  class="w-full max-w-6xl bg-white lg:mt-10 lg:rounded-3xl border border-gray-200 mx-auto"
+>
+  <!-- Header -->
+  <div
+    class="flex lg:flex-row bg-gray-50 flex-col items-center border-b border-gray-200 justify-between pt-4 pb-4 px-6"
+  >
+    <div class="flex items-center">
+      <button
+        (click)="viewSkillsSection()"
+        class="mr-4 p-2 hover:bg-white rounded-full transition-colors text-gray-400 hover:text-gray-600"
+        title="Go Back"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="m15 18-6-6 6-6" />
+        </svg>
+      </button>
+      <div class="flex">
+        <div
+          class="h-16 w-16 rounded-full overflow-hidden flex items-center justify-center"
+        >
+          <img
+            *ngIf="currentSkill.skillIcon"
+            [src]="currentSkill.skillIcon"
+            alt="{{ currentSkill.name }}"
+            class="h-12 w-12"
+          />
+          <span
+            *ngIf="!currentSkill.skillIcon"
+            class="text-2xl text-center items-center bg-white p-2 ovo-regular rounded-full h-12 w-12 text-gray-400"
+          >
+            {{ currentSkill.name.charAt(0).toUpperCase() }}
+          </span>
+        </div>
+        <div class="px-6">
+          <h2
+            class="text-xl lg:text-2xl font-bold text-gray-800 ovo-regular tracking-tight"
+          >
+            {{ currentSkill.name }}
+          </h2>
+          <p class="lg:text-lg text-sm text-gray-500 mt-1">
+            Document your learning journey
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="flex lg:w-fit w-full justify-center items-center px-6 gap-4">
+      <button
+        (click)="toggleTopicModal()"
+        class="group flex lg:w-fit w-full mt-4 lg:mt-0 justify-center items-center gap-2 px-4 py-2 rounded-xl bg-gray-50 text-gray-600 bg-blue-50 text-blue-600 transition-all border border-gray-200 hover:border-blue-200"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="w-4 h-4"
+        >
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        <span class="geist-mono-regular text-sm font-medium">Add Topic</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Topics Grid -->
+  <div class="p-8">
+    <div
+      class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-6"
+    >
+      <div
+        *ngFor="let topicItem of topics"
+        class="group flex flex-col justify-between items-center bg-white rounded-2xl border border-gray-200 transition-all relative"
+      >
+        <div
+          (click)="openTopicAccordian(topicItem?.id)"
+          class="bg-gray-50 cursor-pointer justify-between w-full items-center rounded-t-2xl p-4 px-6 flex"
+          [class.rounded-b-none]="expandedTopicId === topicItem?.id"
+          [class.rounded-2xl]="expandedTopicId !== topicItem?.id"
+        >
+          <div class="flex items-center gap-4">
+            <img
+              *ngIf="currentSkill.skillIcon"
+              [src]="currentSkill.skillIcon"
+              class="h-10 w-10 rounded-full object-contain bg-white border border-gray-100 p-1"
+              alt="Skill Icon"
+            />
+            <span
+              *ngIf="!currentSkill.skillIcon"
+              class="text-lg font-bold flex items-center justify-center bg-white border border-gray-200 rounded-full h-10 w-10 text-gray-500"
+            >
+              {{ topicItem.title.charAt(0).toUpperCase() }}
+            </span>
+            <div class="flex flex-col">
+              <h3
+                class="text-gray-800 geist-mono-regular text-lg font-semibold"
+              >
+                {{ topicItem.title }}
+              </h3>
+              <div class="flex items-center gap-2 mt-1">
+                <span
+                  class="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase"
+                  [ngClass]="{
+                    'bg-green-100 text-green-700':
+                      topicItem.difficulty === 'easy',
+                    'bg-yellow-100 text-yellow-700':
+                      topicItem.difficulty === 'medium',
+                    'bg-red-100 text-red-700': topicItem.difficulty === 'hard',
+                  }"
+                >
+                  {{ topicItem.difficulty }}
+                </span>
+                <span class="text-[10px] text-gray-400">•</span>
+                <span class="text-[10px] font-mono font-bold text-gray-500">{{
+                  topicItem.priority
+                }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-6">
+            <div
+              class="hidden md:flex items-center gap-4 text-xs text-gray-500"
+            >
+              <div class="flex flex-col items-center">
+                <span class="font-bold text-gray-700">{{
+                  topicItem.revisionsCompleted
+                }}</span>
+                <span class="text-[9px] uppercase tracking-wider"
+                  >Revisions</span
+                >
+              </div>
+              <div class="h-6 w-[1px] bg-gray-200"></div>
+              <div class="flex flex-col items-center">
+                <span class="font-bold text-gray-700"
+                  >{{ topicItem.frequency }}x</span
+                >
+                <span class="text-[9px] uppercase tracking-wider">Freq</span>
+              </div>
+            </div>
+
+            <button
+              class="flex items-center justify-center p-2 rounded-full hover:bg-white transition-colors"
+            >
+              <svg
+                class="w-6 h-6 text-neutral-400 transition-transform duration-300"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                [class.rotate-180]="expandedTopicId === topicItem?.id"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Accordion Content -->
+        <div
+          *ngIf="expandedTopicId === topicItem?.id"
+          class="w-full p-6 bg-white rounded-b-3xl border-t border-gray-100 animate-in fade-in slide-in-from-top-2 duration-300"
+        >
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Main Content: Notes & Links -->
+            <div class="lg:col-span-2 flex flex-col gap-6">
+              <div>
+                <label
+                  class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 block"
+                  >Notes & Details</label
+                >
+                <p
+                  class="text-sm text-gray-600 leading-relaxed whitespace-pre-wrap bg-gray-50 p-4 rounded-2xl border border-gray-100"
+                >
+                  {{
+                    topicItem.notes ||
+                      "No detailed notes provided for this topic."
+                  }}
+                </p>
+              </div>
+
+              <div *ngIf="topicItem.link">
+                <label
+                  class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 block"
+                  >Primary Resource</label
+                >
+                <a
+                  [href]="topicItem.link"
+                  target="_blank"
+                  class="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 text-sm font-medium rounded-xl hover:bg-blue-100 transition-colors border border-blue-100"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
+                    ></path>
+                    <path
+                      d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
+                    ></path>
+                  </svg>
+                  Visit Link
+                </a>
+              </div>
+            </div>
+
+            <!-- Sidebar: Companies & Refs -->
+            <div class="flex flex-col gap-6">
+              <div *ngIf="topicItem.companies?.length">
+                <label
+                  class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 block"
+                  >Target Companies</label
+                >
+                <div class="flex flex-wrap gap-2">
+                  <span
+                    *ngFor="let company of topicItem.companies"
+                    class="px-2 py-1 bg-gray-100 text-gray-600 text-[10px] font-semibold rounded-lg border border-gray-200"
+                  >
+                    {{ company }}
+                  </span>
+                </div>
+              </div>
+
+              <div *ngIf="topicItem.references?.length">
+                <label
+                  class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 block"
+                  >References</label
+                >
+                <div class="flex flex-col gap-3">
+                  <a
+                    *ngFor="let ref of topicItem.references"
+                    [href]="ref"
+                    target="_blank"
+                    class="text-xs text-blue-500 hover:text-blue-700 font-medium flex items-center gap-2 group/ref transition-colors"
+                  >
+                    <svg
+                      class="text-gray-400 group-hover/ref:text-blue-400"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path
+                        d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
+                      ></path>
+                      <path
+                        d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
+                      ></path>
+                    </svg>
+                    <span class="truncate underline underline-offset-2">{{
+                      ref
+                    }}</span>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Actions Area -->
+              <div
+                class="mt-auto pt-6 flex items-center justify-end gap-3 border-t border-gray-50"
+              >
+                <button
+                  (click)="editTopic(topicItem)"
+                  class="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-50 rounded-xl transition-colors"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"
+                    />
+                    <path d="m15 5 4 4" />
+                  </svg>
+                  Edit
+                </button>
+                <button
+                  (click)="deleteTopic(topicItem.id!)"
+                  class="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-red-500 hover:bg-red-50 rounded-xl transition-colors"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M3 6h18" />
+                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                  </svg>
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<app-topic-modal
+  [currentTopic]="currentTopic"
+  [mode]="mode"
+  (saveTopicDetails)="saveTopicDetails($event)"
+  (toggleTopicModal)="toggleTopicModal()"
+  *ngIf="isTopicModalOpen"
+></app-topic-modal>
+
+<confirmation-modal
+  *ngIf="isConfirmationModalOpen"
+  [confirmationType]="confirmationType"
+  (confirmAction)="confirmAction($event)"
+  [assetId]="assetId"
+  [isConfirmationModalOpen]="isConfirmationModalOpen"
+/>

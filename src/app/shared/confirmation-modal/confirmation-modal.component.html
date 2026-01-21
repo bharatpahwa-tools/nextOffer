@@ -1,0 +1,39 @@
+<section
+  id="confimration-modal"
+  *ngIf="isConfirmationModalOpen"
+  class="fixed flex flex-col p-4 inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm"
+>
+  <div class="flex items-center max-w-md w-full justify-center">
+    <section
+      id="confimation-modal"
+      class="relative w-full overflow-hidden rounded-3xl border border-white/30 bg-white shadow-2xl backdrop-blur-xl transition-all"
+    >
+      <div
+        class="mb-0 p-4 bg-gray-50 flex flex-col items-center border-b border-gray-200 pb-4 gap-2"
+      >
+        <img class="h-16 w-16" src="/assets/images/bin.png" alt="Bin Icon" />
+        <h2 class="ovo-regular text-center text-xl font-semibold text-gray-800">
+          Are you sure want to {{ confirmationType }} this item?
+        </h2>
+        <p class="text-sm text-gray-600">This action cannot be undone!</p>
+      </div>
+
+      <div class="flex w-full border-t border-gray-200 justify-center p-0">
+        <button
+          (click)="userAction(false)"
+          type="button"
+          class="bg-white w-1/2 text-center px-5 py-2.5 text-sm text-black transition-colors hover:bg-blue-600 hover:text-white hover:shadow-lg"
+        >
+          CANCEL
+        </button>
+        <button
+          (click)="userAction(true)"
+          type="button"
+          class="w-1/2 px-5 py-2.5 bg-gray-100 hover:bg-red-500 hover:text-white text-sm border-l border-gray-200 font-medium text-gray-700 hover:bg-black/5"
+        >
+          {{ confirmationType.toUpperCase() }}
+        </button>
+      </div>
+    </section>
+  </div>
+</section>

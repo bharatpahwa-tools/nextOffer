@@ -1,0 +1,106 @@
+<section
+  id="set-up-modal"
+  class="fixed flex flex-col p-4 inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm"
+  *ngIf="isSetupModalOpen"
+>
+  <div
+    class="set-up-guide relative mb-4 flex w-full max-w-lg flex-col items-center justify-center overflow-hidden rounded-3xl border border-white/30 bg-white shadow-2xl backdrop-blur-xl transition-all"
+  >
+    <div
+      class="bg-gray-50 px-6 pt-6 flex w-full flex-col items-center gap-3 border-b border-gray-200"
+    >
+      <img
+        class="h-14 w-14 opacity-80"
+        src="assets/images/docs.png"
+        alt="Documentation Icon"
+      />
+
+      <h3 class="ovo-regular text-xl font-semibold text-gray-800">
+        Need help getting started?
+      </h3>
+
+      <p class="mb-6 text-center text-sm text-gray-600">
+        Follow the guide to create and setup your project.
+      </p>
+    </div>
+    <a
+      class="bg-blue-100 w-full text-center px-5 py-2.5 text-sm text-blue-800 transition-colors hover:bg-blue-600 hover:text-white hover:shadow-lg"
+      href="https://supabase.com/docs/guides/overview"
+      target="_blank"
+    >
+      View Setup Instructions
+    </a>
+  </div>
+  <div
+    class="flex items-center max-w-lg w-full justify-center"
+    *ngIf="isSetupModalOpen"
+  >
+    <section
+      id="setup-modal"
+      class="relative w-full overflow-hidden rounded-3xl border border-white/30 bg-white shadow-2xl backdrop-blur-xl transition-all"
+    >
+      <div
+        class="mb-0 p-4 bg-gray-50 flex flex-col items-center border-b border-gray-200 pb-4 gap-2"
+      >
+        <img class="h-12 w-12" [src]="supabaseIconUrl" alt="Supabase Icon" />
+        <h2 class="ovo-regular text-xl font-semibold text-gray-800">
+          Supabase Setup
+        </h2>
+        <p class="text-sm text-gray-600">
+          Enter your Supabase credentials to get started
+        </p>
+      </div>
+      <form
+        class="p-0 mt-4"
+        #configForm="ngForm"
+        (ngSubmit)="saveSupabaseConfig()"
+      >
+        <div class="px-4 py-2 mb-4">
+          <label class="mb-1 block text-sm font-medium text-gray-700">
+            Database URL<sup class="text-xs text-red-500">*</sup>
+          </label>
+          <input
+            name="url"
+            [(ngModel)]="supabaseUrl"
+            placeholder="https://xyz.supabase.co"
+            required
+            class="w-full text-sm rounded-xl border border-gray-200 bg-gray-50 p-2 text-gray-800 placeholder-gray-400 backdrop-blur-sm focus:bg-white focus:outline-none"
+          />
+        </div>
+
+        <div class="px-4 mb-8">
+          <label class="mb-1 block text-sm font-medium text-gray-700">
+            API Key<sup class="text-xs text-red-500">*</sup>
+          </label>
+          <input
+            name="key"
+            [(ngModel)]="supabaseKey"
+            placeholder="your-public-anon-key"
+            required
+            class="w-full text-sm rounded-xl border border-gray-200 bg-gray-50 p-2 text-gray-800 placeholder-gray-400 backdrop-blur-sm focus:bg-white focus:outline-none"
+          />
+        </div>
+
+        <div
+          class="flex w-full mt-4 border-t border-gray-200 justify-center p-0"
+        >
+          <button
+            type="button"
+            (click)="closeModal()"
+            class="w-1/2 px-5 py-2.5 hover:bg-red-500 hover:text-white text-sm border-r border-gray-200 font-medium text-gray-700 hover:bg-black/5"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="submit"
+            [disabled]="configForm.invalid"
+            class="bg-blue-100 w-1/2 text-center px-5 py-2.5 text-sm text-blue-800 transition-colors hover:bg-blue-600 hover:text-white hover:shadow-lg"
+          >
+            Save Credentials
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+</section>

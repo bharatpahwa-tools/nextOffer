@@ -1,0 +1,208 @@
+<section
+  id="skills-empty"
+  *ngIf="!skills.length && !showTopics"
+  class="flex flex-col mx-auto items-center justify-center"
+>
+  <div
+    class="w-full lg:mt-10 rounded-3xl max-w-lg bg-gray-50 border-b border-gray-200 my-auto flex flex-col items-center justify-center"
+  >
+    <div class="p-6 flex flex-col gap-2 items-center justify-center">
+      <img
+        class="h-16 w-16 mb-2"
+        src="/assets/images/skills.png"
+        alt="skills"
+      />
+      <p class="ovo-regular text-2xl font-semibold text-gray-800">Add Skills</p>
+      <p class="text-md text-center text-gray-600">
+        Add Skills, Document Learnings, Refer anytime!
+      </p>
+    </div>
+    <button
+      type="button"
+      (click)="openAddSkillModal()"
+      class="bg-blue-100 rounded-br-3xl rounded-bl-3xl w-full text-center px-5 py-2.5 text-sm text-blue-800 transition-colors hover:bg-blue-600 hover:text-white"
+    >
+      Add Skill
+    </button>
+  </div>
+</section>
+
+<section
+  id="skills-list"
+  *ngIf="skills.length && !showTopics"
+  class="w-full max-w-6xl bg-white lg:mt-10 lg:rounded-3xl border border-gray-200 mx-auto"
+>
+  <!-- Header -->
+  <div
+    class="flex lg:flex-row rounded-t-3xl bg-gray-50 flex-col items-center border-b border-gray-200 justify-between pt-4 pb-4"
+  >
+    <div class="flex">
+      <img
+        class="h-16 w-16 ml-8"
+        src="/assets/images/skills.png"
+        alt="Skills"
+      />
+      <div class="px-6">
+        <h2
+          class="text-xl lg:text-2xl font-bold text-gray-800 ovo-regular tracking-tight"
+        >
+          My Skills
+        </h2>
+        <p class="lg:text-lg text-sm text-gray-500 mt-1">
+          Document your learning journey
+        </p>
+      </div>
+    </div>
+    <div class="flex lg:w-fit w-full justify-center items-center px-6 gap-4">
+      <button
+        (click)="openAddSkillModal()"
+        class="group flex lg:w-fit w-full mt-4 lg:mt-0 justify-center items-center gap-2 px-4 py-2 rounded-xl bg-gray-50 text-gray-600 bg-blue-50 text-blue-600 transition-all border border-gray-200 hover:border-blue-200"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="w-4 h-4"
+        >
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        <span class="geist-mono-regular text-sm font-medium">Add Skill</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Skills Grid -->
+  <div class="p-8">
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+    >
+      <div
+        *ngFor="let skillItem of skills"
+        class="group bg-white rounded-3xl border border-gray-200 flex flex-col items-center justify-center transition-all relative"
+      >
+        <!-- Actions (visible on hover) -->
+        <div
+          class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 flex gap-2 transition-opacity"
+        >
+          <button
+            (click)="editSkill(skillItem)"
+            class="text-blue-600 transition-colors"
+            title="Edit"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"
+              ></path>
+            </svg>
+          </button>
+          <button
+            (click)="deleteSkill(skillItem.id!)"
+            class="text-red-600 transition-colors"
+            title="Delete"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path
+                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+              ></path>
+            </svg>
+          </button>
+        </div>
+
+        <div class="flex gap-2 p-4 justify-start w-full items-center">
+          <div
+            class="h-16 w-16 rounded-full overflow-hidden flex items-center justify-center"
+          >
+            <img
+              *ngIf="skillItem.skillIcon"
+              [src]="skillItem.skillIcon"
+              alt="{{ skillItem.name }}"
+              class="h-12 w-12"
+            />
+            <span
+              *ngIf="!skillItem.skillIcon"
+              class="text-2xl text-center items-center bg-gray-50 p-2 ovo-regular rounded-full h-12 w-12 text-gray-400"
+            >
+              {{ skillItem.name.charAt(0).toUpperCase() }}
+            </span>
+          </div>
+
+          <h3 class="text-gray-800 geist-mono-regular text-lg text-center">
+            {{ skillItem.name }}
+          </h3>
+        </div>
+
+        <button
+          (click)="viewTopics(skillItem)"
+          class="group/btn flex px-8 justify-between w-full bg-blue-50 hover:bg-blue-700 transition-all hover:text-white text-blue-700 rounded-b-3xl py-2 flex items-center justify-center gap-2 border-t border-gray-200"
+        >
+          <span>View Topics</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="transition-transform duration-300 group-hover/btn:translate-x-1"
+          >
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<app-skills-modal
+  *ngIf="isSkillModalOpen"
+  [skill]="skill"
+  [mode]="mode"
+  (onSkillSave)="onSkillSave($event)"
+  (toggleSkillModal)="toggleSkillModal()"
+></app-skills-modal>
+
+<app-topics
+  [currentSkill]="currentSkill"
+  *ngIf="showTopics"
+  (goBack)="showTopics = false"
+></app-topics>
+
+<confirmation-modal
+  *ngIf="isConfirmationModalOpen"
+  [confirmationType]="confirmationType"
+  (confirmAction)="confirmAction($event)"
+  [assetId]="assetId"
+  [isConfirmationModalOpen]="isConfirmationModalOpen"
+/>

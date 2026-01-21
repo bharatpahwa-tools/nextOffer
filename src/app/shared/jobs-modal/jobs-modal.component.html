@@ -1,0 +1,153 @@
+<section
+  id="set-up-modal"
+  class="fixed flex flex-col inset-0 z-50 items-center justify-center bg-black/30 backdrop-blur-sm"
+>
+  <div
+    class="flex flex-col my-4 p-4 rounded-3xl max-w-lg w-full justify-center max-h-[90vh]"
+  >
+    <section
+      id="setup-modal"
+      class="relative flex flex-col w-full h-full overflow-hidden rounded-3xl border border-white/30 bg-white shadow-2xl backdrop-blur-xl transition-all"
+    >
+      <div
+        class="shrink-0 mb-0 p-4 bg-gray-50 flex flex-col items-center border-b border-gray-200 pb-4 gap-2"
+      >
+        <img
+          class="h-12 w-12"
+          src="/assets/images/jobsIcon.png"
+          alt="Jobs Icon"
+        />
+        <h2 class="ovo-regular text-xl font-semibold text-gray-800">
+          {{ mode === "new" ? "Add New Job" : "Edit Job" }}
+        </h2>
+        <p class="text-sm text-center text-gray-600">
+          {{
+            mode === "new"
+              ? "Enter your job opening details to start tracking"
+              : "Update your job application details"
+          }}
+        </p>
+      </div>
+      <form
+        #jobsForm="ngForm"
+        (ngSubmit)="saveNewJobDetails()"
+        class="flex flex-col flex-1 overflow-hidden bg-white"
+      >
+        <div class="flex-1 overflow-y-auto px-6 py-4 flex flex-col gap-4">
+          <div class="flex flex-col items-start gap-1">
+            <label class="mb-1 block text-sm font-medium text-gray-700">
+              Company Name<sup class="text-xs text-red-500">*</sup>
+            </label>
+            <input
+              required
+              class="p-2 bg-gray-50 text-sm border border-gray-200 rounded-xl w-full"
+              placeholder="Enter Company Name"
+              name="company"
+              type="text"
+              [(ngModel)]="currentJob.companyName"
+            />
+          </div>
+          <div class="flex flex-col items-start gap-1">
+            <label class="mb-1 block text-sm font-medium text-gray-700">
+              Position<sup class="text-xs text-red-500">*</sup>
+            </label>
+            <input
+              required
+              placeholder="Enter Position"
+              class="p-2 bg-gray-50 text-sm border border-gray-200 rounded-xl w-full"
+              name="position"
+              type="text"
+              [(ngModel)]="currentJob.position"
+            />
+          </div>
+          <div class="flex flex-col items-start gap-1">
+            <label class="mb-1 block text-sm font-medium text-gray-700">
+              Deadline
+            </label>
+            <input
+              required
+              class="p-2 text-sm bg-gray-50 border border-gray-200 rounded-xl w-full"
+              name="deadline"
+              type="date"
+              [(ngModel)]="currentJob.deadline"
+            />
+          </div>
+          <div class="flex flex-col items-start gap-1">
+            <label class="mb-1 block text-sm font-medium text-gray-700">
+              Job Link
+            </label>
+            <input
+              placeholder="Enter Job Url"
+              class="p-2 bg-gray-50 text-sm border border-gray-200 rounded-xl w-full"
+              name="JobUrl"
+              type="url"
+              [(ngModel)]="currentJob.jobLink"
+            />
+          </div>
+          <div class="flex flex-col items-start gap-1">
+            <label class="mb-1 block text-sm font-medium text-gray-700">
+              Email
+            </label>
+            <input
+              placeholder="Enter Email Id"
+              class="p-2 bg-gray-50 text-sm border border-gray-200 rounded-xl w-full"
+              name="email"
+              type="email"
+              [(ngModel)]="currentJob.email"
+            />
+          </div>
+          <div class="flex flex-col items-start gap-1">
+            <label class="mb-1 block text-sm font-medium text-gray-700">
+              Status<sup class="text-xs text-red-500">*</sup>
+            </label>
+            <select
+              required
+              class="p-2 bg-gray-50 border border-gray-200 rounded-xl w-full"
+              name="status"
+              aria-placeholder="Choose Status"
+              [(ngModel)]="currentJob.status.status"
+            >
+              <option value="new">New</option>
+              <option value="applied">Applied</option>
+              <option value="interviewing">Interviewing</option>
+              <option value="accepted">Accepted</option>
+              <option value="rejected">Rejected</option>
+              <option value="closed">Closed</option>
+              <option value="referred">Referred</option>
+            </select>
+          </div>
+          <div class="flex flex-col items-start gap-1">
+            <label class="mb-1 block text-sm font-medium text-gray-700">
+              Notes
+            </label>
+            <textarea
+              placeholder="Enter Notes"
+              class="p-2 bg-gray-50 text-sm border border-gray-200 rounded-xl w-full"
+              name="notes"
+              [(ngModel)]="currentJob.notes"
+            ></textarea>
+          </div>
+        </div>
+        <div
+          class="shrink-0 flex w-full border-t border-gray-200 justify-center p-0"
+        >
+          <button
+            type="button"
+            (click)="closeModal()"
+            class="w-1/2 px-5 py-2.5 hover:bg-red-500 hover:text-white text-sm border-r border-gray-200 font-medium text-gray-700 hover:bg-black/5"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="submit"
+            [disabled]="jobsForm.invalid"
+            class="bg-blue-100 w-1/2 text-center px-5 py-2.5 text-sm text-blue-800 transition-colors hover:bg-blue-600 hover:text-white hover:shadow-lg"
+          >
+            {{ mode === "new" ? "Add Job" : "Save Changes" }}
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+</section>

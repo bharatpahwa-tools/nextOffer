@@ -1,0 +1,234 @@
+<section
+  id="topic-modal"
+  class="fixed flex flex-col inset-0 z-50 items-center justify-center bg-black/30 backdrop-blur-sm"
+>
+  <div
+    class="flex flex-col my-4 p-4 rounded-3xl max-w-lg w-full justify-center max-h-[90vh]"
+  >
+    <section
+      id="topic-modal"
+      class="relative flex flex-col w-full h-full overflow-hidden rounded-3xl border border-white/30 bg-white shadow-2xl backdrop-blur-xl transition-all"
+    >
+      <div
+        class="shrink-0 mb-0 p-4 bg-gray-50 flex flex-col items-center border-b border-gray-200 pb-4 gap-2"
+      >
+        <img
+          class="h-12 w-12"
+          src="/assets/images/topic.png"
+          alt="Topic Icon"
+        />
+        <h2 class="ovo-regular text-xl font-semibold text-gray-800">
+          {{ mode === "new" ? "Add New Topic" : "Edit Topic" }}
+        </h2>
+        <p class="text-sm text-center text-gray-600">
+          {{
+            mode === "new"
+              ? "Enter your topic details to start tracking"
+              : "Update your topic details"
+          }}
+        </p>
+      </div>
+      <form
+        #topicForm="ngForm"
+        (ngSubmit)="saveTopic()"
+        class="flex flex-col flex-1 overflow-hidden bg-white"
+      >
+        <div class="flex-1 overflow-y-auto px-6 py-4 flex flex-col gap-4">
+          <!-- Topic Name -->
+          <div class="flex flex-col items-start gap-1">
+            <label
+              for="topicName"
+              class="mb-1 block text-sm font-medium text-gray-700"
+            >
+              Topic Name<sup class="text-xs text-red-500">*</sup>
+            </label>
+            <input
+              required
+              class="p-2 bg-gray-50 text-sm border border-gray-200 rounded-xl w-full focus:ring-2 focus:ring-blue-500 outline-none"
+              placeholder="Enter Topic Name"
+              name="topicName"
+              [(ngModel)]="currentTopic.title"
+              type="text"
+            />
+          </div>
+
+          <!-- Article URL -->
+          <div class="flex flex-col items-start gap-1">
+            <label
+              for="articleUrl"
+              class="mb-1 block text-sm font-medium text-gray-700"
+            >
+              Article URL
+            </label>
+            <input
+              class="p-2 bg-gray-50 text-sm border border-gray-200 rounded-xl w-full focus:ring-2 focus:ring-blue-500 outline-none"
+              placeholder="https://..."
+              name="articleUrl"
+              type="url"
+              [(ngModel)]="currentTopic.link"
+            />
+          </div>
+
+          <!-- Difficulty & Priority -->
+          <div class="grid grid-cols-2 gap-4">
+            <div class="flex flex-col items-start gap-1">
+              <label class="mb-1 block text-sm font-medium text-gray-700">
+                Difficulty<sup class="text-xs text-red-500">*</sup>
+              </label>
+              <select
+                required
+                name="difficulty"
+                class="p-2 bg-gray-50 text-sm border border-gray-200 rounded-xl w-full outline-none"
+                [(ngModel)]="currentTopic.difficulty"
+              >
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+              </select>
+            </div>
+            <div class="flex flex-col items-start gap-1">
+              <label class="mb-1 block text-sm font-medium text-gray-700">
+                Priority<sup class="text-xs text-red-500">*</sup>
+              </label>
+              <select
+                required
+                name="priority"
+                class="p-2 bg-gray-50 text-sm border border-gray-200 rounded-xl w-full outline-none"
+                [(ngModel)]="currentTopic.priority"
+              >
+                <option value="P0">P0 (Critical)</option>
+                <option value="P1">P1 (High)</option>
+                <option value="P2">P2 (Medium)</option>
+                <option value="P3">P3 (Low)</option>
+                <option value="P4">P4 (Lowest)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Revisions & Frequency -->
+          <div class="grid grid-cols-2 gap-4">
+            <div class="flex flex-col items-start gap-1">
+              <label class="mb-1 block text-sm font-medium text-gray-700">
+                Revisions
+              </label>
+              <input
+                type="number"
+                name="revisions"
+                class="p-2 bg-gray-50 text-sm border border-gray-200 rounded-xl w-full outline-none"
+                [(ngModel)]="currentTopic.revisionsCompleted"
+              />
+            </div>
+            <div class="flex flex-col items-start gap-1">
+              <label class="mb-1 block text-sm font-medium text-gray-700">
+                Frequency (In Interviews)
+              </label>
+              <input
+                type="number"
+                name="frequency"
+                class="p-2 bg-gray-50 text-sm border border-gray-200 rounded-xl w-full outline-none"
+                [(ngModel)]="currentTopic.frequency"
+              />
+            </div>
+          </div>
+
+          <!-- Companies (Keywords) -->
+          <div class="flex flex-col items-start gap-1">
+            <label class="mb-1 block text-sm font-medium text-gray-700">
+              Companies (Keywords)
+            </label>
+            <div
+              class="flex flex-wrap gap-2 p-2 bg-gray-50 border border-gray-200 rounded-xl w-full min-h-[42px]"
+            >
+              <span
+                *ngFor="let company of currentTopic.companies; let i = index"
+                class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-lg flex items-center gap-1"
+              >
+                {{ company }}
+                <button
+                  type="button"
+                  (click)="removeCompany(i)"
+                  class="text-blue-600 hover:text-red-500"
+                >
+                  &times;
+                </button>
+              </span>
+              <input
+                class="bg-transparent text-sm outline-none flex-1 min-w-[100px]"
+                placeholder="Type and enter..."
+                name="companyInput"
+                [(ngModel)]="companyInput"
+                (keydown.enter)="addCompany($event)"
+                (blur)="addCompany($event)"
+              />
+            </div>
+          </div>
+
+          <!-- References -->
+          <div class="flex flex-col items-start gap-1">
+            <label class="mb-1 block text-sm font-medium text-gray-700">
+              References
+            </label>
+            <div
+              class="flex flex-wrap gap-2 p-2 bg-gray-50 border border-gray-200 rounded-xl w-full min-h-[42px]"
+            >
+              <span
+                *ngFor="let ref of currentTopic.references; let i = index"
+                class="bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded-lg flex items-center gap-1"
+              >
+                {{ ref }}
+                <button
+                  type="button"
+                  (click)="removeReference(i)"
+                  class="text-gray-500 hover:text-red-500"
+                >
+                  &times;
+                </button>
+              </span>
+              <input
+                class="bg-transparent text-sm outline-none flex-1 min-w-[100px]"
+                placeholder="Type and enter..."
+                name="referenceInput"
+                [(ngModel)]="referenceInput"
+                (keydown.enter)="addReference($event)"
+                (blur)="addReference($event)"
+              />
+            </div>
+          </div>
+
+          <!-- Notes -->
+          <div class="flex flex-col items-start gap-1">
+            <label class="mb-1 block text-sm font-medium text-gray-700">
+              Quick Notes
+            </label>
+            <textarea
+              rows="3"
+              class="p-2 bg-gray-50 text-sm border border-gray-200 rounded-xl w-full focus:ring-2 focus:ring-blue-500 outline-none"
+              placeholder="Key takeaways..."
+              name="notes"
+              [(ngModel)]="currentTopic.notes"
+            ></textarea>
+          </div>
+        </div>
+        <div
+          class="shrink-0 flex w-full border-t border-gray-200 justify-center p-0"
+        >
+          <button
+            type="button"
+            (click)="closeModal()"
+            class="w-1/2 px-5 py-2.5 hover:bg-red-500 hover:text-white text-sm border-r border-gray-200 font-medium text-gray-700 hover:bg-black/5 transition-colors"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="submit"
+            [disabled]="topicForm.invalid"
+            class="bg-blue-100 w-1/2 text-center px-5 py-2.5 text-sm text-blue-800 transition-colors hover:bg-blue-600 hover:text-white hover:shadow-lg font-semibold"
+          >
+            {{ mode === "new" ? "Add Topic" : "Save Changes" }}
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+</section>

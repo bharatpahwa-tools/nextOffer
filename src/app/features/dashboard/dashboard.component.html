@@ -1,0 +1,25 @@
+<app-navbar
+  [activetab]="activetab"
+  [isSetupModalOpen]="isSetupModalOpen"
+  (activetabChange)="getActiveTab($event)"
+  (toggleSetupModal)="toggleSetupModal()"
+/>
+<app-setup-modal
+  [supabaseUrl]="supabaseUrl"
+  [supabaseKey]="supabaseKey"
+  (supabaseUrlChange)="onSupabaseUrlChange($event)"
+  (supabaseKeyChange)="onSupabaseKeyChange($event)"
+  [isSetupModalOpen]="isSetupModalOpen"
+  (toggleSetupModal)="toggleSetupModal()"
+/>
+
+<section class="w-full bg-gray-50">
+  <div
+    id="dashboard"
+    class="flex border-x-2 bg-white border-gray-100 h-screen flex-col max-w-7xl mx-auto"
+  >
+    <app-timeline *ngIf="activetab === 'timeline'"></app-timeline>
+    <app-jobs *ngIf="activetab === 'jobs'"></app-jobs>
+    <app-skills *ngIf="activetab === 'skills'"></app-skills>
+  </div>
+</section>
